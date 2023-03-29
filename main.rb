@@ -9,7 +9,7 @@ require 'openssl'
 require_relative 'provisioning_parser'
 
 def find_resign_path
-  'resign.sh'
+  './resign.sh'
 end
 
 def create_provisioning_options(provisioning_profiles)
@@ -103,6 +103,9 @@ end
 ipa_url = ENV['AC_RESIGN_IPA_URL']
 ipa = ENV['AC_RESIGN_FILENAME']
 `curl -o "./#{ipa}" -k #{ipa_url}`
+puts "DEBUG"
+FileUtils.cp(ipa, File.join((ENV['AC_OUTPUT_DIR']).to_s))
+
 if File.extname(ipa) == '.zip'
   puts "Handling Xcarchive #{ipa}"
   FileUtils.cp(ipa, File.join((ENV['AC_OUTPUT_DIR']).to_s))
