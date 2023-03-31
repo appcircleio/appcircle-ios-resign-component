@@ -87,7 +87,7 @@ def resign(ipa, signing_identity, provisioning_profiles, entitlements, version, 
   use_app_entitlements_flag = '--use-app-entitlements' if use_app_entitlements
 
   command = [
-    resign_path.shellescape,
+    resign_path,
     ipa.shellescape,
     signing_identity.shellescape,
     provisioning_options, # we are aleady shellescaping this above, when we create the provisioning_options from the provisioning_profiles
@@ -121,7 +121,7 @@ puts 'DEBUG'
 FileUtils.cp(ipa, File.join((ENV['AC_OUTPUT_DIR']).to_s))
 puts 'File Header'
 puts `xxd -l 32 #{ipa}`
-puts `ls -a`
+puts `ls "#{File.expand_path(File.dirname(__FILE__))}"`
 
 if File.extname(ipa) == '.zip'
   puts "Handling Xcarchive #{ipa}"
