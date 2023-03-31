@@ -10,16 +10,14 @@ require 'openssl'
 require_relative 'provisioning_parser'
 
 def find_resign_path
-  "bash #{File.expand_path(File.dirname(__FILE__))}/resign.sh"
+  "bash #{__dir__}/resign.sh"
 end
 
 def valid_xml?(xml_string)
-  begin
-    Nokogiri::XML(xml_string)
-    true
-  rescue Nokogiri::XML::SyntaxError
-    false
-  end
+  Nokogiri::XML(xml_string)
+  true
+rescue Nokogiri::XML::SyntaxError
+  false
 end
 
 def create_provisioning_options(provisioning_profiles)
@@ -42,7 +40,7 @@ def create_entitlements_options(targets)
         "-e #{filepath.shellescape}"
       else
         puts "Target #{target['BundleId']} doesn't have valid entitlements"
-        nil  
+        nil
       end
     end
   end.compact.join(' ')
@@ -118,10 +116,10 @@ end
 ipa_url = ENV['AC_RESIGN_IPA_URL']
 ipa = ENV['AC_RESIGN_FILENAME']
 `curl -o "./#{ipa}" -k "#{ipa_url}"`
-puts "DEBUG"
+puts 'DEBUG'
 FileUtils.cp(ipa, File.join((ENV['AC_OUTPUT_DIR']).to_s))
-puts "File Header"
-puts `xxd -l 32 #{apk_path}`
+puts 'File Header'
+puts `xxd -l 32 #{ipa}`
 
 if File.extname(ipa) == '.zip'
   puts "Handling Xcarchive #{ipa}"
