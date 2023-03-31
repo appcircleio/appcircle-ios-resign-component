@@ -10,7 +10,8 @@ require 'openssl'
 require_relative 'provisioning_parser'
 
 def find_resign_path
-  "bash #{__dir__}/resign.sh"
+  sh_script_path = "#{File.expand_path(File.dirname(__FILE__))}/resign.sh"
+  "bash #{sh_script_path}"
 end
 
 def valid_xml?(xml_string)
@@ -120,6 +121,7 @@ puts 'DEBUG'
 FileUtils.cp(ipa, File.join((ENV['AC_OUTPUT_DIR']).to_s))
 puts 'File Header'
 puts `xxd -l 32 #{ipa}`
+puts `ls -a`
 
 if File.extname(ipa) == '.zip'
   puts "Handling Xcarchive #{ipa}"
