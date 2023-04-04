@@ -123,11 +123,6 @@ puts 'File Header'
 puts `xxd -l 32 #{ipa}`
 puts `ls "#{File.expand_path(File.dirname(__FILE__))}"`
 
-if File.extname(ipa) == '.zip'
-  puts "Handling Xcarchive #{ipa}"
-  FileUtils.cp(ipa, File.join((ENV['AC_OUTPUT_DIR']).to_s))
-  exit 0
-end
 targets_json = ENV['AC_RESIGN_TARGETS']
 targets = JSON.parse(File.read(targets_json))
 main_target = targets.first
@@ -161,7 +156,7 @@ puts "Use Original #{use_app_entitlements}"
 
 resign(ipa,
        signing_identity,
-       provisioning_profiles,
+       provisioning_profile,
        entitlements,
        version,
        display_name,
