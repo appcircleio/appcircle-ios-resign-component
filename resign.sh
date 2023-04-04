@@ -175,6 +175,7 @@ RAW_PROVISIONS=()
 PROVISIONS_BY_ID=()
 DEFAULT_PROVISION=""
 TEMP_DIR="_floatsignTemp"
+XC_TEMP_DIR="_xcarchiveTemp"
 USE_APP_ENTITLEMENTS=""
 XCODE_VERSION="$(xcodebuild -version | grep "Xcode" | /usr/bin/cut -f 2 -d ' ')"
 
@@ -305,7 +306,7 @@ elif [ "${extension}" = "app" ]; then
     cp -Rf "${ORIGINAL_FILE}" "$TEMP_DIR/Payload/${filename}.app"
     checkStatus
 elif [ "${extension}" = "zip" ]; then
-    echo "Handling xcarhive"
+    echo "Handling xcarhive $ORIGINAL_FILE"
     unzip -q "$ORIGINAL_FILE" -d $XC_TEMP_DIR
     # Copy .app to Payload folder
     mkdir -p "$TEMP_DIR/Payload"

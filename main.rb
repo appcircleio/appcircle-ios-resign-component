@@ -86,7 +86,7 @@ def resign(ipa, signing_identity, provisioning_profiles, entitlements, version, 
   bundle_id = "-b '#{new_bundle_id}'" if new_bundle_id
   use_app_entitlements_flag = '--use-app-entitlements' if use_app_entitlements
   output_dir = ENV['AC_OUTPUT_DIR']
-  ouutput_file =  File.join(output_dir,ipa)
+  output_file =  File.join(output_dir,ipa)
 
   command = [
     resign_path,
@@ -108,7 +108,6 @@ def resign(ipa, signing_identity, provisioning_profiles, entitlements, version, 
 
   if $CHILD_STATUS.to_i.zero?
     puts "Successfully signed #{ipa}!"
-    FileUtils.cp(ipa, File.join((ENV['AC_OUTPUT_DIR']).to_s))
     true
   else
     puts("Something went wrong while code signing #{ipa}")
@@ -118,11 +117,12 @@ end
 
 ipa_url = ENV['AC_RESIGN_IPA_URL']
 ipa = ENV['AC_RESIGN_FILENAME']
-`curl -o "./#{ipa}" -k "#{ipa_url}"`
+`curl -s -o "./#{ipa}" -k "#{ipa_url}"`
 puts 'DEBUG'
 puts 'File Header'
 puts `xxd -l 32 #{ipa}`
-puts `ls "#{File.expand_path(File.dirname(__FILE__))}"`
+puts 'File Size'
+puts `ls -s #{ipa}`
 
 targets_json = ENV['AC_RESIGN_TARGETS']
 targets = JSON.parse(File.read(targets_json))
