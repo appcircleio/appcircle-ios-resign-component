@@ -314,6 +314,9 @@ elif [ "${extension}" = "zip" ]; then
     cp -Rf "${app_folder}" "$TEMP_DIR/Payload/"
     echo "App folder $app_folder"
     echo "Parent folder $parent_dir"
+    app_name=$(basename "$app_folder" .app)
+    NEW_FILE="$(dirname "$NEW_FILE")/$app_name.ipa"
+    echo "New IPA $NEW_FILE"
 
     if [[ -d "$parent_dir/SwiftSupport" ]]; then
       cp -r "$parent_dir/SwiftSupport" "$TEMP_DIR"

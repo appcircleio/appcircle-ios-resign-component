@@ -85,6 +85,8 @@ def resign(ipa, signing_identity, provisioning_profiles, entitlements, version, 
   bundle_version = "--bundle-version #{bundle_version}" if bundle_version
   bundle_id = "-b '#{new_bundle_id}'" if new_bundle_id
   use_app_entitlements_flag = '--use-app-entitlements' if use_app_entitlements
+  output_dir = ENV['AC_OUTPUT_DIR']
+  ouutput_file =  File.join(output_dir,ipa)
 
   command = [
     resign_path,
@@ -98,7 +100,7 @@ def resign(ipa, signing_identity, provisioning_profiles, entitlements, version, 
     bundle_version,
     use_app_entitlements_flag,
     bundle_id,
-    ipa.shellescape # Output path must always be last argument
+    output_file # Output path must always be last argument
   ].join(' ')
 
   puts(command.magenta)
@@ -118,7 +120,6 @@ ipa_url = ENV['AC_RESIGN_IPA_URL']
 ipa = ENV['AC_RESIGN_FILENAME']
 `curl -o "./#{ipa}" -k "#{ipa_url}"`
 puts 'DEBUG'
-FileUtils.cp(ipa, File.join((ENV['AC_OUTPUT_DIR']).to_s))
 puts 'File Header'
 puts `xxd -l 32 #{ipa}`
 puts `ls "#{File.expand_path(File.dirname(__FILE__))}"`
@@ -164,3 +165,4 @@ resign(ipa,
        bundle_version,
        new_bundle_id,
        use_app_entitlements)
+       
