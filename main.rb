@@ -32,6 +32,20 @@ def create_provisioning_options(provisioning_profiles)
   end.join(' ')
 end
 
+def create_entitlement(target)
+  filepath = File.join(ENV['AC_TEMP_DIR'], "#{target['BundleId']}.xml")
+  if !File.exist?(filepath) && target['Entitlements']
+    if valid_xml?(target['Entitlements'])
+      File.write(filepath, target['Entitlements'])
+      "-e #{filepath.shellescape}"
+    else
+      puts "Target #{target['BundleId']} doesn't have valid entitlements"
+      nil
+    end
+  end
+end
+
+# TODO: Multiple Entitlements support
 def create_entitlements_options(targets)
   targets.map do |target|
     filepath = File.join(ENV['AC_TEMP_DIR'], "#{target['BundleId']}.xml")
@@ -137,7 +151,7 @@ signing_name = certificate.name
 puts "Name: #{signing_name} SHA-1: #{signing_identity}"
 
 provisioning_profile = Hash[bundle_ids.zip(provisioning_profiles)]
-entitlements = create_entitlements_options(targets)
+entitlements = create_entitlement(main_target)
 
 version = nil
 display_name = main_target['Display']
