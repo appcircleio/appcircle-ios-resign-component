@@ -100,7 +100,7 @@ def resign(ipa, signing_identity, provisioning_profiles, entitlements, version, 
   bundle_id = "-b '#{new_bundle_id}'" if new_bundle_id
   use_app_entitlements_flag = '--use-app-entitlements' if use_app_entitlements
   output_dir = ENV['AC_OUTPUT_DIR']
-  output_file =  File.join(output_dir,ipa)
+  output_file = File.join(output_dir, ipa)
 
   command = [
     resign_path,
@@ -122,10 +122,8 @@ def resign(ipa, signing_identity, provisioning_profiles, entitlements, version, 
 
   if $CHILD_STATUS.to_i.zero?
     puts "Successfully signed #{ipa}!"
-    true
   else
-    puts("Something went wrong while code signing #{ipa}")
-    false
+    raise("Something went wrong while code signing #{ipa}")
   end
 end
 
@@ -157,8 +155,9 @@ version = nil
 display_name = main_target['Display']
 short_version = main_target['Version']
 bundle_version = main_target['BuildNumber']
+original_bundle_id = main_target['OriginalBundleId']
 new_bundle_id = main_target['BundleId']
-use_app_entitlements = main_target['UseOriginal']
+use_app_entitlements = main_target['UseAppEntitlements']
 
 puts "Entitlements #{entitlements}"
 puts "Display Name #{display_name}"
@@ -166,9 +165,11 @@ puts "Single Version #{version}"
 
 puts "Version #{short_version}"
 puts "Build Number #{bundle_version}"
-puts "Bundle Id #{new_bundle_id}"
+puts "Original Bundle Id #{original_bundle_id}"
+puts "New Bundle Id #{new_bundle_id}"
 puts "Use Original #{use_app_entitlements}"
 
+new_bundle_id = nil if new_bundle_id == original_bundle_id
 resign(ipa,
        signing_identity,
        provisioning_profile,
@@ -179,4 +180,3 @@ resign(ipa,
        bundle_version,
        new_bundle_id,
        use_app_entitlements)
-       
