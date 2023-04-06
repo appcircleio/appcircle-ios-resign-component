@@ -86,9 +86,9 @@ def bundle_ids
   end
 end
 
-def new_bundle_ids(targets)
+def original_bundle_ids(targets)
   targets.map do |target|
-    target['BundleId'] || target['OriginalBundleId']
+    target['OriginalBundleId']
   end
 end
 
@@ -154,10 +154,10 @@ signing_identity = certificate.signature
 signing_name = certificate.name
 puts "Name: #{signing_name} SHA-1: #{signing_identity}"
 
-# We must use new_bundle_ids from the new targets.
-new_provisioning_profiles = Hash[new_bundle_ids.zip(provisioning_profiles)]
+# We must use original from the new targets.
+new_provisioning_profiles = Hash[original_bundle_ids.zip(provisioning_profiles)]
 puts "Provisioning Profile Bundle Ids: #{bundle_ids}"
-puts "New Bundle Ids: #{new_bundle_ids}"
+puts "Original Bundle Ids: #{original_bundle_ids}"
 puts "Provisionining profiles #{new_provisioning_profiles}"
 entitlements = create_entitlement(main_target)
 
