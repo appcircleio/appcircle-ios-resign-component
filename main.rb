@@ -86,6 +86,12 @@ def bundle_ids
   end
 end
 
+def new_bundle_ids(targets)
+  targets.map do |target|
+    target['BundleId'] || target['OriginalBundleId']
+  end
+end
+
 def resign(ipa, signing_identity, provisioning_profiles, entitlements, version, display_name, short_version,
            bundle_version, new_bundle_id, use_app_entitlements)
   resign_path = find_resign_path
@@ -148,7 +154,11 @@ signing_identity = certificate.signature
 signing_name = certificate.name
 puts "Name: #{signing_name} SHA-1: #{signing_identity}"
 
-provisioning_profile = Hash[bundle_ids.zip(provisioning_profiles)]
+# We must use new_bundle_ids from the new targets.
+new_provisioning_profiles = Hash[new_bundle_ids.zip(provisioning_profiles)]
+puts "Provisioning Profile Bundle Ids: #{bundle_ids}"
+puts "New Bundle Ids: #{new_bundle_ids}"
+puts "Provisionining profiles #{new_provisioning_profiles}"
 entitlements = create_entitlement(main_target)
 
 version = nil
@@ -172,7 +182,7 @@ puts "Use Original #{use_app_entitlements}"
 new_bundle_id = nil if new_bundle_id == original_bundle_id
 resign(ipa,
        signing_identity,
-       provisioning_profile,
+       new_provisioning_profiles,
        entitlements,
        version,
        display_name,
