@@ -86,7 +86,7 @@ def bundle_ids
   end
 end
 
-def original_bundle_ids(targets)
+def map_bundle_ids(targets)
   targets.map do |target|
     target['OriginalBundleId']
   end
@@ -153,7 +153,7 @@ certificate = first_provision.developer_certs[0]
 signing_identity = certificate.signature
 signing_name = certificate.name
 puts "Name: #{signing_name} SHA-1: #{signing_identity}"
-
+original_bundle_ids = map_bundle_ids(targets)
 # We must use original from the new targets.
 new_provisioning_profiles = Hash[original_bundle_ids.zip(provisioning_profiles)]
 puts "Provisioning Profile Bundle Ids: #{bundle_ids}"
