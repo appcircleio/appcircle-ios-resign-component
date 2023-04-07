@@ -127,20 +127,15 @@ def resign(ipa, signing_identity, provisioning_profiles, entitlements, version, 
   puts(`#{command}`)
 
   if $CHILD_STATUS.to_i.zero?
-    puts "Successfully signed #{ipa}!"
+    puts "✅ Successfully signed #{ipa}!".blue
   else
-    raise("Something went wrong while code signing #{ipa}")
+    raise("❌ Something went wrong while code signing #{ipa}")
   end
 end
 
 ipa_url = ENV['AC_RESIGN_IPA_URL']
 ipa = ENV['AC_RESIGN_FILENAME']
 `curl -s -o "./#{ipa}" -k "#{ipa_url}"`
-puts 'DEBUG'
-puts 'File Header'
-puts `xxd -l 32 #{ipa}`
-puts 'File Size'
-puts `ls -s #{ipa}`
 
 targets_json = ENV['AC_RESIGN_TARGETS']
 targets = JSON.parse(File.read(targets_json))
@@ -168,16 +163,6 @@ bundle_version = main_target['BuildNumber']
 original_bundle_id = main_target['OriginalBundleId']
 new_bundle_id = main_target['BundleId']
 use_app_entitlements = main_target['UseAppEntitlements']
-
-puts "Entitlements #{entitlements}"
-puts "Display Name #{display_name}"
-puts "Single Version #{version}"
-
-puts "Version #{short_version}"
-puts "Build Number #{bundle_version}"
-puts "Original Bundle Id #{original_bundle_id}"
-puts "New Bundle Id #{new_bundle_id}"
-puts "Use Original #{use_app_entitlements}"
 
 new_bundle_id = nil if new_bundle_id == original_bundle_id
 resign(ipa,
