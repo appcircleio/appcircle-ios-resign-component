@@ -157,7 +157,7 @@ puts "Provisionining profiles #{new_provisioning_profiles}"
 entitlements = create_entitlement(main_target)
 
 version = nil
-display_name = main_target['Display']
+display_name = main_target['DisplayName']
 short_version = main_target['Version']
 bundle_version = main_target['BuildNumber']
 original_bundle_id = main_target['OriginalBundleId']
