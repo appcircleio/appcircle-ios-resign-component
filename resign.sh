@@ -495,13 +495,8 @@ function resign {
     # Update the CFBundleDisplayName property in the Info.plist if a new name has been provided
     if [ "${DISPLAY_NAME}" != "" ]; then
         if [ "${DISPLAY_NAME}" != "${CURRENT_NAME}" ]; then
-            if [ "-n ${CURRENT_NAME}" ]; then
-                log "Changing bundle display name from '$CURRENT_NAME' to '$DISPLAY_NAME'"
-                PlistBuddy -c "Set :CFBundleDisplayName $DISPLAY_NAME" "$APP_PATH/Info.plist"
-            else 
-                log "Changing bundle name from '$CURRENT_NAME' to '$DISPLAY_NAME'"
-                PlistBuddy -c "Set :CFBundleName $DISPLAY_NAME" "$APP_PATH/Info.plist"   
-            fi
+            log "Changing display name from '$CURRENT_NAME' to '$DISPLAY_NAME'"
+            PlistBuddy -c "Set :CFBundleDisplayName $DISPLAY_NAME" "$APP_PATH/Info.plist"
         fi
     fi
 
