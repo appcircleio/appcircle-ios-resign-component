@@ -495,8 +495,10 @@ function resign {
     # Update the CFBundleDisplayName property in the Info.plist if a new name has been provided
     if [ "${DISPLAY_NAME}" != "" ]; then
         if [ "${DISPLAY_NAME}" != "${CURRENT_NAME}" ]; then
-            log "Changing display name from '$CURRENT_NAME' to '$DISPLAY_NAME'"
-            PlistBuddy -c "Set :CFBundleDisplayName $DISPLAY_NAME" "$APP_PATH/Info.plist"
+            # Escape the display name before sending it to PlistBuddy
+            ESCAPED_DISPLAY_NAME=$(printf "%s" "$DISPLAY_NAME" | sed "s/['\"\\]/\\\\&/g")
+            log "Changing display name from '$CURRENT_NAME' to '$ESCAPED_DISPLAY_NAME'"
+            PlistBuddy -c "Set :CFBundleDisplayName $ESCAPED_DISPLAY_NAME" "$APP_PATH/Info.plist"
         fi
     fi
 
